@@ -67,19 +67,63 @@ ksm_enforce_singleton | while IFS= read -r _ksm_id; do
   [ -n "$_ksm_id" ] && ui_print "- Disabled $_ksm_id (keystore conflict)"
 done
 
+_bundle="$MODPATH/deps/bundled"
+
 if ! module_enabled teesim >/dev/null \
   && ! module_enabled tricky_store >/dev/null \
   && ! module_enabled "${OMK_MODULE##*/}" >/dev/null; then
-  ui_print "- Installing TEESimulator-RS.."
-  if install_module_from_github "Enginex0/TEESimulator-RS" "TEESimulator-RS"; then
-    ui_print "- TEESimulator-RS installed"
+  ui_print "- Installing Tricky Store..."
+  if install_module_zip "$_bundle/tricky_store.zip" "Tricky Store"; then
+    ui_print "- Tricky Store installed"
   else
-    ui_print "- TEESimulator-RS not available"
+    ui_print "- Tricky Store not installed"
   fi
 else
-  ui_print "- Keystore backend present, skipping TEESimulator-RS"
+  ui_print "- Keystore backend present, skipping Tricky Store"
 fi
 unset _ts_name _teesim_name _omk_name
+
+if module_detect playintegrityfix >/dev/null; then
+  ui_print "- Play Integrity Fix present"
+else
+  ui_print "- Installing Play Integrity Fix..."
+  if install_module_zip "$_bundle/playintegrityfix.zip" "Play Integrity Fix"; then
+    ui_print "- Play Integrity Fix installed"
+  else
+    ui_print "- Play Integrity Fix not installed"
+  fi
+fi
+
+detect_keystore_manager
+if [ "$KSM" = "none" ] || [ -z "$KSM_DIR" ]; then
+  KSM=trickystore
+  KSM_DIR="$TRICKY_DIR"
+  KSM_KEYBOX="$TARGET_FILE"
+  KSM_CONFIG="$SECURITY_PATCH_FILE"
+  KSM_FORMAT=txt
+  export KSM KSM_DIR KSM_KEYBOX KSM_CONFIG KSM_FORMAT
+fi
+mkdir -p "$KSM_DIR" 2>/dev/null || true
+
+if [ -f "$_bundle/security_patch.txt" ]; then
+  _patch=$(tr -d '[:space:]' < "$_bundle/security_patch.txt")
+  if [ -n "$_patch" ] && ksm_set_security_patch "$_patch"; then
+    ui_print "- Security patch $_patch"
+  else
+    ui_print "- Security patch not applied"
+  fi
+  unset _patch
+fi
+
+if [ -f "$_bundle/keybox.xml" ]; then
+  if ksm_install_keybox "$_bundle/keybox.xml" copy; then
+    ui_print "- Keybox installed"
+  else
+    ui_print "- Keybox not installed"
+  fi
+fi
+rm -rf "$_bundle"
+unset _bundle
 
 # Mark first-boot setup as pending (runs once after reboot in service.sh)
 mkdir -p "$SPECTER_DIR"

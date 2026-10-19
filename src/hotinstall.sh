@@ -34,12 +34,12 @@ rm -f "$SPECTER_DIR/.hotinstall_failed"
     log_i "HOT" "Scheduler relaunched (PID $!)"
   fi
 
-  log_i "HOT" "Running action.sh"
-  if sh "$MODDIR/action.sh"; then
-    log_i "HOT" "action.sh completed"
+  log_i "HOT" "Running pipeline.sh"
+  if sh "$MODDIR/pipeline.sh"; then
+    log_i "HOT" "pipeline.sh completed"
   else
     _rc=$?
-    log_e "HOT" "action.sh failed (exit $_rc)"
+    log_e "HOT" "pipeline.sh failed (exit $_rc)"
     : > "$SPECTER_DIR/.hotinstall_failed"
   fi
 

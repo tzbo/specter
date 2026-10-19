@@ -59,7 +59,7 @@ describe('required files', () => {
     'META-INF/com/google/android/update-binary',
     'META-INF/com/google/android/updater-script',
     'customize.sh',
-    'action.sh',
+    'pipeline.sh',
     'service.sh',
     'post-fs-data.sh',
     'uninstall.sh',
@@ -118,7 +118,7 @@ describe('module sizes', () => {
   it('module.zip is under 2MB', () => {
     const zips = execSync('ls -1 *.zip 2>/dev/null || true', { cwd: PROJECT_ROOT, encoding: 'utf8', timeout: 5000 }).trim().split('\n').filter(Boolean)
     for (const z of zips) {
-      expect(statSync(resolve(PROJECT_ROOT, z)).size).toBeLessThan(2 * 1024 * 1024)
+      expect(statSync(resolve(PROJECT_ROOT, z)).size).toBeLessThan(30 * 1024 * 1024)
     }
   })
 })

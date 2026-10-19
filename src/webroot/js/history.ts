@@ -91,7 +91,7 @@ export async function openRecentActivity(devMode = false) {
   list.className = 'activity-list';
 
   for (const entry of entries) {
-    const friendlyName = entry.script === 'action.sh' ? 'Action' : (t(getFriendlyNames()[entry.script] ?? '', '') || entry.script);
+    const friendlyName = entry.script === 'action.sh' || entry.script === 'pipeline.sh' ? 'Action' : (t(getFriendlyNames()[entry.script] ?? '', '') || entry.script);
     const isError = entry.output.includes('[!]') || entry.output.toLowerCase().includes('error');
     const card = document.createElement('md-elevated-card');
     card.className = 'activity-card' + (isError ? ' activity-card--error' : ' activity-card--success');
@@ -149,7 +149,7 @@ export async function renderActivityPreview() {
   for (let i = 0; i < count; i++) {
     const entry = allEntries[i]!;
     const isError = entry.code !== undefined ? entry.code !== 0 : entry.output.toLowerCase().includes('error');
-    const friendlyName = entry.script === 'action.sh' ? 'Action' : (t(getFriendlyNames()[entry.script] ?? '', '') || entry.script);
+    const friendlyName = entry.script === 'action.sh' || entry.script === 'pipeline.sh' ? 'Action' : (t(getFriendlyNames()[entry.script] ?? '', '') || entry.script);
     const stripLog = (l: string) => l.replace(/^\[\d{2}:\d{2}:\d{2}\] \[[DIWE]\] \[[^\]]*\] /, '');
     const desc = entry.output.split('\n').map(stripLog).reverse().find(l => l.trim() && !/^(>|x |\[!\])/.test(l))?.slice(0, 50) || '';
     const item = document.createElement('div');

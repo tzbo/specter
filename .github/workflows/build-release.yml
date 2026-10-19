@@ -60,7 +60,7 @@ jobs:
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Build
-        run: npm run build
+        run: bash build.sh
 
       - name: Stamp release module.prop
         run: |

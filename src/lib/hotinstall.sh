@@ -43,7 +43,7 @@ specter_hot_install() {
 
   ui_print "- Refresh module page after installation"
   if [ "${_hi_apply_failed:-0}" = "1" ]; then
-    ui_print "- WARNING: live-apply failed; run action.sh from WebUI or reboot"
+    ui_print "- WARNING: live-apply failed; reboot"
   else
     ui_print "- No need to reboot"
   fi

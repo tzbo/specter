@@ -51,7 +51,7 @@ for _sec in 1 2 3 4 5 6 7 8 9 10; do check_network 2>/dev/null && break; sleep 1
 unset _sec
 
 log_i "FIRST_BOOT" "Running full integrity pipeline"
-SPECTER_FIRST_BOOT=1 sh "$MODDIR/../action.sh" || log_e "FIRST_BOOT" "action.sh failed (exit $?)"
+SPECTER_FIRST_BOOT=1 sh "$MODDIR/../pipeline.sh" || log_e "FIRST_BOOT" "pipeline.sh failed (exit $?)"
 
 log_i "FIRST_BOOT" "First-boot setup complete"
 exit 0

@@ -33,6 +33,25 @@ module_disable() {
   unset _mdi_id _mdi_dir
 }
 
+install_module_zip() {
+  _mz_zip="$1"
+  _mz_name="${2:-module}"
+
+  [ -f "$_mz_zip" ] || return 1
+  [ -n "$ROOT_SOL" ] || detect_root_solution
+
+  _mz_rc=1
+  case "$ROOT_SOL" in
+    magisk)   magisk --install-module "$_mz_zip" >/dev/null 2>&1 && _mz_rc=0 ;;
+    kernelsu) ksud module install "$_mz_zip" >/dev/null 2>&1 && _mz_rc=0 ;;
+    apatch)   apd module install "$_mz_zip" >/dev/null 2>&1 && _mz_rc=0 ;;
+  esac
+
+  _mz_rc_final=$_mz_rc
+  unset _mz_zip _mz_name _mz_rc
+  return $_mz_rc_final
+}
+
 install_module_from_github() {
   _mg_repo="$1"
   _mg_name="${2:-$_mg_repo}"

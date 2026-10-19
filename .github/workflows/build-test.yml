@@ -43,7 +43,7 @@ jobs:
         run: npm test
 
       - name: Build
-        run: npm run build
+        run: bash build.sh
 
       - name: Verify module structure
         run: |
